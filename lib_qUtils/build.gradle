@@ -4,6 +4,11 @@ plugins {
     id 'maven-publish'
 }
 
+task generateSourcesJar(type: Jar){
+    from android.sourceSets.main.java.srcDirs
+    classifier 'sources'
+}
+
 android {
     compileSdk 32
 
@@ -37,15 +42,28 @@ dependencies {
 }
 
 //注意放置位置，复制此段代码稍加修改即可
+//afterEvaluate {
+//    publishing {
+//        publications {
+//            release(MavenPublication) {
+//                from components.release
+//                //和你的仓库地址的反写一致，此处不会修改最终发布的组件依赖名，最终发布的groupId由你的仓库地址和名称决定
+//                groupId = 'com.gitee.dengwuqiang.qutils-demo'
+//                //单组件发布时随意填写，多组件时即为此组件的artifactId
+//                artifactId = 'lib_qUtils'
+//            }
+//        }
+//    }
+//}
+
 afterEvaluate {
     publishing {
         publications {
             release(MavenPublication) {
-                from components.release
-                //和你的仓库地址的反写一致，此处不会修改最终发布的组件依赖名，最终发布的groupId由你的仓库地址和名称决定
-                groupId = 'com.gitee.dengwuqiang.qutils-demo'
-                //单组件发布时随意填写，多组件时即为此组件的artifactId
-                artifactId = 'lib_qUtils'
+                from components.release         // 表示发布 release（jitpack 都不会使用到）
+                groupId = 'com.qwd.lib_qutils' // 这个是依赖库的组 id
+                artifactId = 'SmallUtils'       // 依赖库的名称（jitpack 都不会使用到）
+                version ="1.0.0"                //当前版本依赖库版本号，这个jitpack不会使用到，只是我们开发者自己查看
             }
         }
     }
